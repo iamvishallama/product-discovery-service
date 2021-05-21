@@ -1,8 +1,6 @@
 package com.nitkkr.semanticweb.recommender.services.implementations;
 
 import com.nitkkr.semanticweb.recommender.constants.Constant;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.*;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
@@ -152,7 +150,7 @@ public class MyOntology {
         System.out.println("__________________________________________________________");
     }
 
-    public void getGraphDetails(){
+    /*public void getGraphDetails(){
         Graph graph = ontModel.getGraph();
 
 //        System.out.println("Number of prefixes: "+graph.getPrefixMapping().numPrefixes());
@@ -162,7 +160,7 @@ public class MyOntology {
 //        System.out.println("Capabilities- "+ graph.getCapabilities());
 //        System.out.println("Triples-" );
 //        this.display(graph.find());
-    }
+    }*/
 
     public void isObjectOrDataTypeProperty(String resourceLabel){
         OntClass ontClass = getResourceFromLabel(resourceLabel);
@@ -302,7 +300,7 @@ public class MyOntology {
         //listProperties.hasNext()
     }
 
-    public Triple getRDFTriples() {
+    /*public Triple getRDFTriples() {
         Model model = ontModel.write(System.out, "N3", null);
         ArrayList<Triple> tripleArrayList = new ArrayList<>();
         Iterator iterator = model.listStatements();
@@ -314,7 +312,7 @@ public class MyOntology {
             tripleArrayList.stream().forEach(System.out::println);
         }
         return triple;
-    }
+    }*/
 
     public List<String> executeSparql(String productSpec1, String productSpec2){
 
