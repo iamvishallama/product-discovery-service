@@ -8,7 +8,7 @@
         <version>2.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.nitkkr.semanticweb</groupId>
+    <groupId>com.engineering.semanticweb</groupId>
     <artifactId>recommendersystem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>recommendersystem</name>
