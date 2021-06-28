@@ -1,6 +1,7 @@
 package com.nitkkr.semanticweb.recommender.services.implementations;
 
 import com.nitkkr.semanticweb.recommender.constants.Constant;
+import com.nitkkr.semanticweb.recommender.constants.SPARQLQuery;
 import org.apache.jena.ontology.*;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 
 public class MyOntology {
 
@@ -314,19 +314,18 @@ public class MyOntology {
         return triple;
     }*/
 
+    public List<String> executeSparql(String sparqlQuery){
+        setOntology(Constant.EEKG_RDF);
+        Query query = QueryFactory.create(sparqlQuery);
+        QueryExecution queryExecution  = QueryExecutionFactory.create(query,ontModel);
+        List<String> resultList = getResult(queryExecution);
+        return resultList;
+    }
+
+
     public List<String> executeSparql(String productSpec1, String productSpec2){
 
         setOntology(Constant.EEKG_RDF);
-
-        /*OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-        try {
-            File file = new File(Constant.ONTOLOGY_DIRECTORY_PATH + Constant.PRODUCT_RDF);
-            FileReader fileReader = new FileReader(file);
-            ontModel.read(fileReader, null);
-        } catch (Exception e){
-            e.printStackTrace();
-        }*/
-
 
         String sparqlQuery = this.getQuery(productSpec1, productSpec2);
         Query query = QueryFactory.create(sparqlQuery);
@@ -365,76 +364,6 @@ public class MyOntology {
     }
 
     private String getQuery(String productSpec1, String productSpec2) {
-       // Give all product details
-        String query2 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "PREFIX gr: <http://purl.org/goodrelations/v1#>\n" +
-                "PREFIX eeo: <http://rdf-dump/eeo/0.1/>\n" +
-                "PREFIX schema: <https://schema.org/>\n" +
-                "\n" +
-                "SELECT DISTINCT ?ProductName ?Brand ?Price ?Currency ?Seller ?Quantity  WHERE {\n" +
-                "?s a gr:ProductOrServiceModel ; dc:title ?ProductName ; eeo:hasSellerQuotation ?SellerQuotationId ; gr:hasBrand ?Brand.\n" +
-                "?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds .\n" +
-                "?quotationIds eeo:hasSeller ?Seller; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps .\n" +
-                "?ps schema:price ?Price ; schema:currency ?Currency .\n" +
-                "} \n";
-
-        //Contraint on Price
-        String query3 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "PREFIX gr: <http://purl.org/goodrelations/v1#>\n" +
-                "PREFIX eeo: <http://rdf-dump/eeo/0.1/>\n" +
-                "PREFIX schema: <https://schema.org/>\n" +
-                "\n" +
-                "SELECT DISTINCT ?ProductName ?Brand ?Price ?Currency ?Seller ?Quantity  WHERE {\n" +
-                "?s a gr:ProductOrServiceModel ; dc:title ?ProductName ; eeo:hasSellerQuotation ?SellerQuotationId ; gr:hasBrand ?Brand.\n" +
-                "?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds .\n" +
-                "?quotationIds eeo:hasSeller ?Seller; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps .\n" +
-                "?ps schema:price ?Price ; schema:currency ?Currency .\n" +
-                "FILTER (?Price = 1099)\n" +
-                "} ";
-
-        // find a product having saller's count > 1
-        String query4 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  \n" +
-                "                                PREFIX owl: <http://www.w3.org/2002/07/owl#>  \n" +
-                "                                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>  \n" +
-                "                                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \n" +
-                "                                PREFIX dc: <http://purl.org/dc/elements/1.1/>  \n" +
-                "                                PREFIX gr: <http://purl.org/goodrelations/v1#>  \n" +
-                "                                PREFIX eeo: <http://rdf-dump/eeo/0.1/>  \n" +
-                "                                PREFIX schema: <https://schema.org/>  \n" +
-                "                                SELECT DISTINCT ?ModelNo ?ProductName ?Brand ?Category ?CPU ?RAM ?OS ?ScreenSize ?ScreenType ?GPU ?Weight ?Storage ?ImageURL ?VideoClip ?Price ?Currency ?Seller ?Quantity  WHERE {  \n" +
-                "                                eeo:952905432 a gr:ProductOrServiceModel ; dc:title ?ProductName ; eeo:hasSellerQuotation ?SellerQuotationId ; gr:hasBrand ?Brand ; rdfs:label ?ModelNo ;  \n" +
-                "                                               gr:category ?Category ; eeo:hasCPU ?CPU ; eeo:hasOperatingSystem ?OS ; eeo:hasRAM ?RAM ; eeo:hasScreenSize ?ScreenSize ; eeo:hasScreenType ?ScreenType ; eeo:hasGPU ?GPU ; gr:weight ?Weight  ; eeo:hasStorage ?Storage ; schema:image ?ImageURL ; schema:video ?VideoClip. \n" +
-                "                                ?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds.  \n" +
-                "                                ?quotationIds eeo:hasSeller ?Seller; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps .  \n" +
-                "                                ?ps schema:price ?Price ; schema:currency ?Currency .  } ";
-
-        String query5 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n" +
-                "                PREFIX owl: <http://www.w3.org/2002/07/owl#> \n" +
-                "                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \n" +
-                "                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n" +
-                "                PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
-                "                PREFIX gr: <http://purl.org/goodrelations/v1#> \n" +
-                "                PREFIX eeo: <http://rdf-dump/eeo/0.1/>\n" +
-                "                PREFIX schema: <https://schema.org/> \n" +
-                "                 \n" +
-                "                SELECT DISTINCT ?ProductName ?Brand ?Price ?Currency ?Seller ?Quantity  WHERE { \n" +
-                "                ?s a gr:ProductOrServiceModel ; dc:title ?ProductName ; eeo:hasSellerQuotation ?SellerQuotationId ; gr:category  eeo:Notebook ; eeo:hasRAM eeo:8GB .\n" +
-                "\t?s gr:hasBrand ?Brand . \n" +
-                "                ?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds . \n" +
-                "                ?quotationIds eeo:hasSeller ?Seller; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps . \n" +
-                "                ?ps schema:price ?Price ; schema:currency ?Currency . \n" +
-                "\tFILTER (?Price <= 800 && ?Quantity > 0)\n" +
-                "                } ";
-
-        return query3;
-
+       return SPARQLQuery.getQueryFromTextFile("Query1");
     }
 }

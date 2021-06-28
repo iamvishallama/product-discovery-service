@@ -1,0 +1,16 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ PREFIX owl: <http://www.w3.org/2002/07/owl#>
+ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ PREFIX dc: <http://purl.org/dc/elements/1.1/>
+ PREFIX gr: <http://purl.org/goodrelations/v1#>
+ PREFIX eeo: <http://rdf-dump/eeo/0.1/>
+ PREFIX schema: <https://schema.org/>
+
+ SELECT DISTINCT ?ProductName ?Brand ?Price ?Currency ?Seller ?Quantity WHERE {
+ ?s a gr:ProductOrServiceModel ; dc:title ?ProductName ; eeo:hasSellerQuotation ?SellerQuotationId ; gr:hasBrand ?Brand.
+ ?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds .
+ ?quotationIds eeo:hasSeller ?Seller; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps .
+ ?ps schema:price ?Price ; schema:currency ?Currency .
+ FILTER (?Price = 1099)
+ }
