@@ -15,4 +15,5 @@ public class RecommenderServiceImplementation {
     public List<String> retrieveProducts(String ram, String processor) {
         return myOntology.executeSparql(ram, processor);
     }
+
 }
