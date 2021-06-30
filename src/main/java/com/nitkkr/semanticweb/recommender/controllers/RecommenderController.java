@@ -16,14 +16,24 @@ public class RecommenderController {
     RecommenderApplicationServiceImplementation recommenderApplicationServiceImplementation;
 
     @RequestMapping(value = Constant.RECOMMEND_PRODUCT, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> executeRecommendProduct(@RequestParam(value = "ram", defaultValue = "") String ram,
-                                   @RequestParam(value = "processor", defaultValue = "") String processor){
-        return recommenderApplicationServiceImplementation.retrieveProduct(ram, processor);
+    public List<String> executeRecommendProduct(@RequestParam(value = "Category", defaultValue = "?Category") String category,
+                                                @RequestParam(value = "Brand", defaultValue = "?Brand") String brand,
+                                                @RequestParam(value = "CPU", defaultValue = "?CPU") String cPU,
+                                                @RequestParam(value = "GPU", defaultValue = "?GPU") String gPU,
+                                                @RequestParam(value = "OperatingSystem", defaultValue = "?OS") String oS,
+                                                @RequestParam(value = "RAM", defaultValue = "?RAM") String rAM,
+                                                @RequestParam(value = "ScreenSize", defaultValue = "?ScreenSize") String screenSize,
+                                                @RequestParam(value = "ScreenType", defaultValue = "?ScreenType") String screenType,
+                                                @RequestParam(value = "Storage", defaultValue = "?Storage") String storage,
+                                                @RequestParam(value = "PriceInEuros", defaultValue = "?Price") String price,
+                                                @RequestParam(value = "Seller", defaultValue = "?Seller") String seller,
+                                                @RequestParam(value = "Quantity", defaultValue = "?Quantity") String quantity){
+        return recommenderApplicationServiceImplementation.retrieveProduct(category, brand, cPU, gPU, oS, rAM, screenSize, screenType, storage, price, quantity, seller);
     }
 
     @RequestMapping(value = Constant.SPARQL_ENDPOINT, method = RequestMethod.POST)
-    public List<String> executeSPARQLEndpoint(@RequestBody String spqarqlQuery){
-        return recommenderApplicationServiceImplementation.executeSPARQLEndpoint(spqarqlQuery);
+    public List<String> executeSPARQLEndpoint(@RequestBody String sparqlQuery){
+        return recommenderApplicationServiceImplementation.executeSPARQLEndpoint(sparqlQuery);
     }
 
     @RequestMapping(value = Constant.RAPID_INFORMATION_EXPLORER, method = RequestMethod.GET)

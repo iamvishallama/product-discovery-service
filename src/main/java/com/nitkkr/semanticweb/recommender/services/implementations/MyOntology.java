@@ -68,77 +68,6 @@ public class MyOntology {
         System.out.println("__________________________________________________________");
     }
 
-
-    public void getInformationRelatedToAResource(String resourceLabel){
-        OntClass resource = getResourceFromLabel(resourceLabel);
-        Iterator iterator;
-
-        System.out.println("SubClass-");
-        iterator = resource.listSubClasses();       // the default- resource.listSubClasses(false)
-        this.display(iterator);
-
-        System.out.println("Direct SubClass-");
-        iterator = resource.listSubClasses(true);
-        this.display(iterator);
-
-        System.out.println("SuperClasses-");
-        iterator = resource.listSuperClasses();
-        this.display(iterator);
-
-        System.out.println("Direct SuperClass-");
-        iterator = resource.listSuperClasses(true);
-        this.display(iterator);
-
-        System.out.println("Properties-");
-        iterator = resource.listDeclaredProperties();
-        this.display(iterator);
-
-        System.out.println("Data type properties-");
-        iterator = ontModel.listDatatypeProperties();
-        this.display(iterator);
-
-        System.out.println("Object properties-");
-        iterator = ontModel.listObjectProperties();
-        this.display(iterator);
-
-        System.out.println("Namespace");
-        iterator = ontModel.listNameSpaces();
-        this.display(iterator);
-
-        System.out.println("Instances-");
-        iterator = resource.listInstances();
-        this.display(iterator);
-
-        System.out.println("DisjointClass-");
-        iterator = resource.listDisjointWith();
-        this.display(iterator);
-
-        System.out.println("Equivalent Classes-");
-        iterator = resource.listEquivalentClasses();
-        this.display(iterator);
-
-        System.out.println("Different From-");
-        iterator = resource.listDifferentFrom();
-        this.display(iterator);
-
-        System.out.println("Same as-");
-        iterator = resource.listSameAs();
-        this.display(iterator);
-
-        System.out.println("Is defined by-");
-        iterator = resource.listIsDefinedBy();
-        this.display(iterator);
-
-        System.out.println("See also-");
-        iterator = resource.listSeeAlso();
-        this.display(iterator);
-
-        System.out.println("version info-");
-        iterator = resource.listVersionInfo();
-        this.display(iterator);
-
-    }
-
     private void display(Iterator iterator) {
         if(null!=iterator){
             while (iterator.hasNext()){
@@ -236,7 +165,7 @@ public class MyOntology {
         return uri;
     }
 
-    public void getOntologyRelatedInformation(){
+    /*public void getOntologyRelatedInformation(){
         System.out.println("Imported Ontology: "+ontModel.listImportedOntologyURIs());
 
         System.out.println("List Ontologies-");
@@ -277,61 +206,23 @@ public class MyOntology {
 
         System.out.println("List Hierarchy Root Classes-");
         display(ontModel.listHierarchyRootClasses());
-    }
-
-    public void getClassOfIndividual(String resourceLabel){
-        Individual individual = ontModel.getIndividual(this.getBaseURIFromLabel(resourceLabel)+resourceLabel);
-        Resource rdfType = individual.getRDFType();
-        System.out.println(rdfType.getLocalName());
-        OntClass ontClass = ontModel.getOntClass(rdfType.getURI());
-        System.out.println(ontClass);
-    }
-
-    public void getAnnotationPropertyInLanguage(){
-        Iterator annotationProperties = ontModel.listAnnotationProperties();
-        AnnotationProperty annotationProperty = (AnnotationProperty) annotationProperties.next();
-        System.out.println(annotationProperty);
-
-        Iterator listProperties = annotationProperty.listProperties();
-        StatementImpl iterator = (StatementImpl) listProperties.next();
-        System.out.println(iterator);
-
-        Model model = iterator.getModel();
-        //listProperties.hasNext()
-    }
-
-    /*public Triple getRDFTriples() {
-        Model model = ontModel.write(System.out, "N3", null);
-        ArrayList<Triple> tripleArrayList = new ArrayList<>();
-        Iterator iterator = model.listStatements();
-        Triple triple = null;
-        while (iterator.hasNext()) {
-            StatementImpl statement = (StatementImpl) iterator.next();
-            triple = statement.asTriple();
-            tripleArrayList.add(triple);
-            tripleArrayList.stream().forEach(System.out::println);
-        }
-        return triple;
     }*/
 
     public List<String> executeSparql(String sparqlQuery){
         setOntology(Constant.EEKG_RDF);
-        Query query = QueryFactory.create(sparqlQuery);
-        QueryExecution queryExecution  = QueryExecutionFactory.create(query,ontModel);
-        List<String> resultList = getResult(queryExecution);
-        return resultList;
+        return this.executeAndGetResult(sparqlQuery);
     }
 
-
-    public List<String> executeSparql(String productSpec1, String productSpec2){
-
+    public List<String> executeSparql(String category, String brand, String cPU, String gPU, String oS, String rAM, String screenSize, String screenType, String storage, String price, String  quantity, String seller){
         setOntology(Constant.EEKG_RDF);
+        String sparqlQuery = this.getQuery(category, brand, cPU, gPU, oS, rAM, screenSize, screenType, storage, price, quantity, seller);
+        return this.executeAndGetResult(sparqlQuery);
+    }
 
-        String sparqlQuery = this.getQuery(productSpec1, productSpec2);
+    private List<String> executeAndGetResult(String sparqlQuery) {
         Query query = QueryFactory.create(sparqlQuery);
         QueryExecution queryExecution  = QueryExecutionFactory.create(query,ontModel);
-        List<String> resultList = getResult(queryExecution);
-        return resultList;
+        return getResult(queryExecution);
     }
 
     private List<String> getResult(QueryExecution qexec) {
@@ -363,7 +254,13 @@ public class MyOntology {
         return resultList;
     }
 
-    private String getQuery(String productSpec1, String productSpec2) {
+    private String getQuery(String category, String brand, String cPU, String gPU, String oS, String rAM, String screenSize, String screenType, String storage, String price, String  quantity, String seller) {
        return SPARQLQuery.getQueryFromTextFile("Query1");
+    }
+
+    public List<String> executeRapidInformationExplorer(String keyword) {
+        setOntology(Constant.EEKG_RDF);
+        String sparqlQuery = SPARQLQuery.getKeywordSearchQuery(keyword);
+        return this.executeAndGetResult(sparqlQuery);
     }
 }

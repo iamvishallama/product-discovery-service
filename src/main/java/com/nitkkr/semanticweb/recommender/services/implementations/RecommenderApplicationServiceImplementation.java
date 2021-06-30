@@ -10,8 +10,8 @@ public class RecommenderApplicationServiceImplementation {
     @Inject
     RecommenderDomainServiceImplementation recommenderDomainServiceImplementation;
 
-    public List<String> retrieveProduct(String ram, String processor) {
-        return recommenderDomainServiceImplementation.retrieveProduct(ram, processor);
+    public List<String> retrieveProduct(String category, String brand, String cPU, String gPU, String oS, String rAM, String screenSize, String screenType, String storage, String price, String  quantity, String seller) {
+        return recommenderDomainServiceImplementation.retrieveProduct(category, brand, cPU, gPU, oS, rAM, screenSize, screenType, storage, price, quantity, seller);
     }
 
     public List<String> executeSPARQLEndpoint(String sparqlQuery) {
