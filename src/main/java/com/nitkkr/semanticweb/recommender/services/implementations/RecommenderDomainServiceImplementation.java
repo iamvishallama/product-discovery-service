@@ -28,54 +28,61 @@ public class RecommenderDomainServiceImplementation {
                 "?OS".equalsIgnoreCase(oS)?oS:"eeo:"+oS,
                 "?Seller".equalsIgnoreCase(seller)?seller:"eeo:"+seller);
 
-        String filterCondition = "FILTER (";
-        String and = " && ";
-        String closingBracket = ") . }";
+        if(!cPU.equalsIgnoreCase("?CPU")||!gPU.equalsIgnoreCase("?GPU")||!storage.equalsIgnoreCase("?Storage")
+        ||!screenSize.equalsIgnoreCase("?ScreenSize")||!screenType.equalsIgnoreCase("?ScreenType")||!quantity.equalsIgnoreCase("?Quantity")
+        ||!price.equalsIgnoreCase("?Price")) {
 
-        Boolean pre = false;
-        if(!cPU.equalsIgnoreCase("?CPU")){
-            filterCondition += this.addRegexCondition("?CPU", cPU);
-            pre= true;
+            String filterCondition = "FILTER (";
+            String and = " && ";
+            String closingBracket = ") . }";
+
+            Boolean pre = false;
+            if (!cPU.equalsIgnoreCase("?CPU")) {
+                filterCondition += this.addRegexCondition("?CPU", cPU);
+                pre = true;
+            }
+            if (!gPU.equalsIgnoreCase("?GPU")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addRegexCondition("?GPU", gPU);
+            }
+            if (!storage.equalsIgnoreCase("?Storage")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addRegexCondition("?Storage", storage);
+            }
+            if (!screenSize.equalsIgnoreCase("?ScreenSize")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addRegexCondition("?ScreenSize", screenSize);
+            }
+            if (!screenType.equalsIgnoreCase("?ScreenType")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addRegexCondition("?ScreenType", screenType);
+            }
+            if (!quantity.equalsIgnoreCase("?Quantity")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addIntegerCondition("?Quantity", quantity);
+            }
+            if (!price.equalsIgnoreCase("?Price")) {
+                if (pre == true) {
+                    filterCondition += and;
+                } else pre = true;
+                filterCondition += this.addIntegerCondition("?Price", price);
+            }
+            filterCondition += closingBracket;
+            mainQuery += filterCondition;
+        } else{
+            mainQuery += "}";
         }
-        if(!gPU.equalsIgnoreCase("?GPU")){
-            if(pre==true){
-                filterCondition += and;
-            } else pre = true;
-            filterCondition += this.addRegexCondition("?GPU", gPU);
-        }
-        if(!storage.equalsIgnoreCase("?Storage")){
-            if(pre==true){
-                filterCondition += and;
-            }else pre = true;
-            filterCondition += this.addRegexCondition("?Storage", storage);
-        }
-        if(!screenSize.equalsIgnoreCase("?ScreenSize")){
-            if(pre==true){
-                filterCondition += and;
-            } else pre = true;
-            filterCondition += this.addRegexCondition("?ScreenSize", screenSize);
-        }
-        if(!screenType.equalsIgnoreCase("?ScreenType")){
-            if(pre==true){
-                filterCondition += and;
-            } else pre = true;
-            filterCondition += this.addRegexCondition("?ScreenType", screenType);
-        }
-        if(!quantity.equalsIgnoreCase("?Quantity")){
-            if(pre==true){
-                filterCondition += and;
-            } else pre = true;
-            filterCondition += this.addIntegerCondition("?Quantity", quantity);
-        }
-        if(!price.equalsIgnoreCase("?Price")){
-            if(pre==true){
-                filterCondition += and;
-            } else pre = true;
-            filterCondition += this.addIntegerCondition("?Price", price);
-        }
-        filterCondition += closingBracket;
-        System.out.println(filterCondition);
-        mainQuery += filterCondition;
+
         return executeSPARQLEndpoint(mainQuery);
     }
 
