@@ -1,8 +1,10 @@
 package com.nitkkr.semanticweb.recommender.constants;
 
+import javax.management.Query;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 
 public class SPARQLQuery {
     /*  Query1: Products with RAM = 8GB, having price not more than 800 Euros,
@@ -22,6 +24,10 @@ public class SPARQLQuery {
     //Query5: get all the product i5 CPU configuration and Intel GPU
     public static String query5 = getQueryFromTextFile("Query5");
 
+    //Query5: get all the product i5 CPU configuration and Intel GPU
+    public static String query6 = getQueryFromTextFile("Query6");
+
+
     public SPARQLQuery() {
     }
 
@@ -36,20 +42,10 @@ public class SPARQLQuery {
     }
 
     public static String getKeywordSearchQuery(String keyword) {
-        String query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n" +
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n" +
-                "PREFIX gr: <http://purl.org/goodrelations/v1#>\n" +
-                "PREFIX eeo: <http://rdf-dump/eeo/0.1/>\n" +
-                "PREFIX schema: <https://schema.org/>\n" +
-                "SELECT DISTINCT ?Subject ?Property ?Object  WHERE\n" +
-                "{" +
-                "{ ?Subject ?Property ?Object. FILTER (REGEX(?Object , \""+keyword+"\")) } OPTIONAL\n" +
-                "{ ?Subject ?Property ?Object. FILTER (regex(?Property , \""+keyword+"\")) } OPTIONAL \n" +
-                "{ ?Subject ?Property ?Object. FILTER (regex(?Subject , \""+keyword+"\")) } \n" +
-                "}";
-        return query;
+      return String.format(query6, keyword, keyword, keyword);
+    }
+
+    public static String formQuery(String category, String brand, String rAM, String oS, String seller) {
+        return String.format(getQueryFromTextFile("Query0"), category, brand, rAM, oS, seller);
     }
 }

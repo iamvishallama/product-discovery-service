@@ -1,5 +1,6 @@
 package com.nitkkr.semanticweb.recommender.services.configs;
 
+import com.nitkkr.semanticweb.recommender.constants.SPARQLQuery;
 import com.nitkkr.semanticweb.recommender.services.implementations.MyOntology;
 import com.nitkkr.semanticweb.recommender.services.implementations.RecommenderDomainServiceImplementation;
 import org.springframework.context.annotation.Bean;
@@ -15,5 +16,10 @@ public class ServiceConfig {
     @Bean
     MyOntology myOntology(){
         return new MyOntology();
+    }
+
+    @Bean
+    SPARQLQuery sparqlQuery(){
+        return new SPARQLQuery();
     }
 }

@@ -213,9 +213,9 @@ public class MyOntology {
         return this.executeAndGetResult(sparqlQuery);
     }
 
-    public List<String> executeSparql(String category, String brand, String cPU, String gPU, String oS, String rAM, String screenSize, String screenType, String storage, String price, String  quantity, String seller){
+    public List<String> executeSparql(String category, String brand, String rAM, String oS, String seller){
         setOntology(Constant.EEKG_RDF);
-        String sparqlQuery = this.getQuery(category, brand, cPU, gPU, oS, rAM, screenSize, screenType, storage, price, quantity, seller);
+        String sparqlQuery = this.getQuery(category, brand, rAM, oS, seller);
         return this.executeAndGetResult(sparqlQuery);
     }
 
@@ -254,8 +254,9 @@ public class MyOntology {
         return resultList;
     }
 
-    private String getQuery(String category, String brand, String cPU, String gPU, String oS, String rAM, String screenSize, String screenType, String storage, String price, String  quantity, String seller) {
-       return SPARQLQuery.getQueryFromTextFile("Query1");
+    private String getQuery(String category, String brand, String rAM, String oS, String seller) {
+        String makeQuery = SPARQLQuery.formQuery(category, brand, rAM, oS, seller);
+        return SPARQLQuery.getQueryFromTextFile("Query1");
     }
 
     public List<String> executeRapidInformationExplorer(String keyword) {

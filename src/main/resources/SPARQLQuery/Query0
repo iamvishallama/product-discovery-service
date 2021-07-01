@@ -1,0 +1,19 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX gr: <http://purl.org/goodrelations/v1#>
+PREFIX eeo: <http://rdf-dump/eeo/0.1/>
+PREFIX schema: <https://schema.org/>
+SELECT DISTINCT ?ProductName ?Brand ?ProductModelNo ?Category ?RAM ?CPU ?GPU ?Storage ?ScreenSize ?ScreenType ?OS ?Image ?ProductClip ?Seller ?Quantity ?Price
+WHERE {
+	?ProductModelNo a gr:ProductOrServiceModel ; dc:title ?ProductName ; schema:image ?Image ; schema:video ?ProductClip  ; eeo:hasSellerQuotation ?SellerQuotationId  ;
+
+		gr:category %s ; gr:hasBrand %s ; eeo:hasRAM %s  ; eeo:hasOperatingSystem %s  ; eeo:hasCPU ?CPU ; eeo:hasGPU ?GPU ; eeo:hasStorage ?Storage ;  eeo:hasScreenSize ?ScreenSize ; eeo:hasScreenType ?ScreenType .
+
+  	?SellerQuotationId a rdf:Bag ; eeo:sellerQuotationID ?quotationIds .
+
+  	?quotationIds eeo:hasSeller %s; eeo:hasQuantityInStock ?Quantity ; gr:hasPriceSpecification ?ps .
+
+  	?ps schema:price ?Price ; schema:currency ?Currency .
